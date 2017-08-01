@@ -48,17 +48,29 @@ steppy *add_list(steppy* list, steppy* cv){
 }
 
 
-int find (steppy* list, int x, int y){
+steppy *find (steppy* list, int x, int y){
 	steppy* curr = list;
 	for ( ; curr != NULL ; curr = curr->next){
 		if ((curr->x == x) && (curr->y == y)){
-			printf("Found it - ");
-			return 1;
+			printf("\n*****Item found***** ");
+			return curr;
 		}
 	}
 	printf("NOT found - ");
 
-	return 0;
+	return NULL;
+}
+
+void print_find (steppy *list, int x, int y){
+	steppy *foo =find(list, x, y);
+	if (foo == NULL){
+		//printf("NOT FOUND! \n");
+	}else{
+		printf("\nITEM at x:%d y:%d \n", foo->x, foo->y);
+		exit(0);
+		
+	}
+
 }
 
 steppy *add_steps (steppy *list, int steps, steppy *position, int mode){
@@ -66,34 +78,47 @@ steppy *add_steps (steppy *list, int steps, steppy *position, int mode){
 		if (mode == 0){ // (curr == 'R') && (facing == 'N')
 			//printf("i:%d | position->x:%d | position->x+i:%d \n", i, position->x, (position->x)+i);
 			steppy *temp = new_step_xy((position->x)+i, position->y);
+			print_find(list,(position->x)+i, position->y);
 			list = add_list(list, temp);
+
 		}else if (mode == 1){ //((curr == 'R') && (facing == 'D')){
 			steppy *temp = new_step_xy((position->x)-i, position->y);
+			print_find(list,(position->x)-i, position->y);
 			list = add_list(list, temp);
 
 		}else if (mode ==2){ //((curr == 'R') && (facing == 'R'))
 			steppy *temp = new_step_xy((position->x), position->y-i);
+			print_find(list,(position->x), (position->y)-i);
 			list = add_list(list, temp);
-		
+
 		}else if (mode ==3){ //(curr == 'R') && (facing == 'L')){
 			steppy *temp = new_step_xy((position->x), position->y+i);
+			print_find(list,(position->x), (position->y)+i);
 			list = add_list(list, temp);
-		
+
 		}else if (mode ==4){ //(curr == 'L') && (facing == 'N')
 			steppy *temp = new_step_xy((position->x)-i, position->y);
+			print_find(list,(position->x)-i, position->y);
 			list = add_list(list, temp);
+
 		}
 		else if (mode ==5){ //((curr == 'L') && (facing == 'D'))
 			steppy *temp = new_step_xy((position->x)+i, position->y);
+			print_find(list,(position->x)+i, position->y);
 			list = add_list(list, temp);
+
 		}
 		else if (mode ==6){ //((curr == 'L') && (facing == 'R'))
 			steppy *temp = new_step_xy((position->x), position->y+i);
+			print_find(list,(position->x), (position->y)+i);
 			list = add_list(list, temp);
+
 		}
 		else if (mode ==7){// ((curr == 'L') && (facing == 'L')
-			steppy *temp = new_step_xy((position->x), position->y-i);
+			steppy *temp = new_step_xy((position->x), (position->y)-i);
+			print_find(list,(position->x), (position->y)-i);
 			list = add_list(list, temp);
+
 		}
 	}
 	return list;
@@ -123,9 +148,10 @@ int main (int argc, char**argv){
 	printf ("Opening file... %s\n",filename );
 
 	char curr;
-	int steps, foo;
+	int steps;
 	char facing = 'N';
 
+	steppy *foo;
 	steppy *visited = new_step_xy(0,0);
 	steppy *position = new_step_xy(0,0);
 
@@ -146,8 +172,9 @@ int main (int argc, char**argv){
 		if ((curr == 'R') && (facing == 'N')){
 			facing = 'R';
 			visited = add_steps(visited, steps, position, 0);
+
 			position->x += steps;
-			
+
 		}else if ((curr == 'R') && (facing == 'D')){
 			facing = 'L';
 			visited = add_steps(visited, steps, position, 1);
@@ -193,12 +220,18 @@ int main (int argc, char**argv){
 	print_list(visited);
 	printf("\n FINAL position.y:%d position.x:%d\n ", position->y, position->x);
 
-	int x =1;
-	int y=0;
+	/*
+	int x =-9;
+	int y=-3;
 	foo =find(visited, x, y);
-	printf("Find x:%d y:%d - %d \n", x, y, foo);
+	if (foo == NULL){
+		printf("NOT FOUND! \n");
+	}else{
+		printf("Find x:%d y:%d \n", foo->x, foo->y);
+		
+	}
 
-
+	*/
 
 
 
