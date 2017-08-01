@@ -8,12 +8,10 @@ struct step{
     int x;
     int y;
     steppy* next;
-
 };
 
 void *emalloc(size_t n) {
 	void *p;
-
 	p = malloc(n);
 	if (p == NULL) {
 		fprintf(stderr, "malloc of %zu bytes failed", n);
@@ -22,8 +20,6 @@ void *emalloc(size_t n) {
 	return p;
 }
  
-
-
 steppy* new_step_xy(int x, int y) {
 	steppy* temp;
 	temp = (steppy *) emalloc(sizeof(steppy));
@@ -61,6 +57,7 @@ steppy *find (steppy* list, int x, int y){
 	return NULL;
 }
 
+//Checks if we have already crossed that path, returns location crossed
 void print_find (steppy *list, int x, int y){
 	steppy *foo =find(list, x, y);
 	if (foo == NULL){
@@ -68,15 +65,12 @@ void print_find (steppy *list, int x, int y){
 	}else{
 		printf("\nITEM at x:%d y:%d \n", foo->x, foo->y);
 		exit(0);
-		
 	}
-
 }
 
 steppy *add_steps (steppy *list, int steps, steppy *position, int mode){
 	for (int i =1 ; i <= steps ; i++){
 		if (mode == 0){ // (curr == 'R') && (facing == 'N')
-			//printf("i:%d | position->x:%d | position->x+i:%d \n", i, position->x, (position->x)+i);
 			steppy *temp = new_step_xy((position->x)+i, position->y);
 			print_find(list,(position->x)+i, position->y);
 			list = add_list(list, temp);
@@ -118,11 +112,9 @@ steppy *add_steps (steppy *list, int steps, steppy *position, int mode){
 			steppy *temp = new_step_xy((position->x), (position->y)-i);
 			print_find(list,(position->x), (position->y)-i);
 			list = add_list(list, temp);
-
 		}
 	}
 	return list;
-
 }
 
 void print_list (steppy *list){
@@ -131,10 +123,7 @@ void print_list (steppy *list){
 	}
 }
 
-
 int main (int argc, char**argv){
-	// int score [4]; //0 north, 1 right, 2 left, 3 south
-	// int compass =0; 
 	char filename[50];
 	strncpy (filename, argv[1], 50);
 
@@ -151,7 +140,6 @@ int main (int argc, char**argv){
 	int steps;
 	char facing = 'N';
 
-	steppy *foo;
 	steppy *visited = new_step_xy(0,0);
 	steppy *position = new_step_xy(0,0);
 
@@ -168,13 +156,10 @@ int main (int argc, char**argv){
 
 		printf("LOOP position.x:%d position.y:%d\n ", position->x, position->y);
 
-
 		if ((curr == 'R') && (facing == 'N')){
 			facing = 'R';
 			visited = add_steps(visited, steps, position, 0);
-
 			position->x += steps;
-
 		}else if ((curr == 'R') && (facing == 'D')){
 			facing = 'L';
 			visited = add_steps(visited, steps, position, 1);
@@ -192,47 +177,23 @@ int main (int argc, char**argv){
 		if ((curr == 'L') && (facing == 'N')){
 			facing = 'L';
 			visited = add_steps(visited, steps, position, 4);
-
 			position->x -= steps;
 		}else if ((curr == 'L') && (facing == 'D')){
 			facing = 'R';
 			visited = add_steps(visited, steps, position, 5);
-
 			position->x += steps;
 		}else if ((curr == 'L') && (facing == 'R')){
 			facing = 'N';
 			visited = add_steps(visited, steps, position, 6);
-
 			position->y += steps;
 		}else if ((curr == 'L') && (facing == 'L')){
 			facing = 'D';
 			visited = add_steps(visited, steps, position, 7);
-
 			position->y -= steps;
 		}
-
-
-
-
 
 	}
 	printf("\nPrinting list:\n");
 	print_list(visited);
 	printf("\n FINAL position.y:%d position.x:%d\n ", position->y, position->x);
-
-	/*
-	int x =-9;
-	int y=-3;
-	foo =find(visited, x, y);
-	if (foo == NULL){
-		printf("NOT FOUND! \n");
-	}else{
-		printf("Find x:%d y:%d \n", foo->x, foo->y);
-		
-	}
-
-	*/
-
-
-
 }
